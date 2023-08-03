@@ -1,26 +1,36 @@
+from django.contrib.auth.models import AbstractUser, User
 from django.db import models
+
+
+# class User(AbstractUser):
+#     email = models.EmailField(unique=True)
+#
 
 
 # level 1
 class Client(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='clients')
     name = models.CharField(max_length=255)
 
 
 # level 2
 class Project(models.Model):
     client = models.ForeignKey(Client, related_name='projects', on_delete=models.CASCADE)
-    epic = models.OneToOneField('Epic', related_name='project', on_delete=models.DO_NOTHING, null=True, blank=True)
     title = models.CharField(max_length=255)
 
 
 # level 3
+class Staff(models.Model):
+    role = models.CharField(max_length=255)
+    actors = models.ManyToManyField('Actor')
+
+
 class Actor(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='actors')
     name = models.CharField(max_length=255)
 
 
-class Epic(models.Model):
-    epic = models.CharField(max_length=255)
+
 
 
 # level 4
