@@ -22,15 +22,13 @@ class Project(models.Model):
 # level 3
 class Staff(models.Model):
     role = models.CharField(max_length=255)
-    actors = models.ManyToManyField('Actor')
+    # actors = models.ManyToManyField('Actor', related_name='staff')
 
 
 class Actor(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='actors')
     name = models.CharField(max_length=255)
-
-
-
+    staff = models.ManyToManyField('Staff', related_name='actors')
 
 
 # level 4

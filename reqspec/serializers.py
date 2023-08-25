@@ -31,16 +31,27 @@ class UseCaseSerializer(serializers.ModelSerializer):
         fields = ['id', 'user_stories', 'title', 'specification']
 
 
+class StaffSerializer(serializers.ModelSerializer):
+    # actors = ActorSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Staff
+        fields = ['id', 'role', 'actors']
+
 class ActorSerializer(serializers.ModelSerializer):
     user_stories = UserStorySerializer(many=True, read_only=True)
+    staff = StaffSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = Actor
-        fields = ['id', 'project', 'name', 'user_stories']
+        fields = ['id', 'project', 'name', 'user_stories', 'staff']
 
 
-class StaffSerializer(serializers.ModelSerializer):
-    actors = ActorSerializer(many=True)
+
+
+
+class CreateStaffSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Staff
