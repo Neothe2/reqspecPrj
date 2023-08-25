@@ -17,48 +17,61 @@ class UseCaseSpecificationSerializer(serializers.ModelSerializer):
 
 
 class UserStorySerializer(serializers.ModelSerializer):
+
     class Meta:
         model = UserStory
-        fields = ['id', 'actor', 'story']
+        fields = ['id', 'actor', 'story', 'use_cases']
 
 
 class UseCaseSerializer(serializers.ModelSerializer):
-    user_stories = UserStorySerializer(many=True)
-    specification = UseCaseSpecificationSerializer()
+    user_stories = UserStorySerializer(many=True, read_only=True)
+    specification = UseCaseSpecificationSerializer(read_only=True)
 
     class Meta:
         model = UseCase
         fields = ['id', 'user_stories', 'title', 'specification']
 
 
+class EditUserStorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserStory
+        fields = ['id', 'actor', 'story', 'use_cases']
+
+
+class EditUseCaseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UseCase
+        fields = ['id', 'user_stories', 'title']
+
+
 class StaffSerializer(serializers.ModelSerializer):
-    # actors = ActorSerializer(many=True, read_only=True)
 
     class Meta:
         model = Staff
         fields = ['id', 'role', 'actors']
 
+
 class ActorSerializer(serializers.ModelSerializer):
     user_stories = UserStorySerializer(many=True, read_only=True)
     staff = StaffSerializer(many=True, read_only=True)
-
 
     class Meta:
         model = Actor
         fields = ['id', 'project', 'name', 'user_stories', 'staff']
 
 
-
-
-
-class CreateStaffSerializer(serializers.ModelSerializer):
-
+class EditStaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
         fields = ['id', 'role', 'actors']
 
 
-
+class EditActorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Actor
+        fields = ['id', 'project', 'name', 'staff']
 
 
 class ProjectSerializer(serializers.ModelSerializer):

@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import Client, Project, Actor, UserStory, UseCase, UseCaseSpecification, SpecificationSection, Staff
 from .serializers import ClientSerializer, ProjectSerializer, ActorSerializer, UserStorySerializer, UseCaseSerializer, \
-    UseCaseSpecificationSerializer, SpecificationSectionSerializer, StaffSerializer, CreateStaffSerializer
+    UseCaseSpecificationSerializer, SpecificationSectionSerializer, StaffSerializer, EditStaffSerializer, \
+    EditActorSerializer, EditUserStorySerializer, EditUseCaseSerializer
 
 
 class ClientViewSet(viewsets.ModelViewSet):
@@ -46,6 +47,11 @@ class ActorViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Actor.objects.filter(project_id=self.kwargs['project_pk'], project__client__user=self.request.user)
 
+    def get_serializer_class(self):
+        if self.request.method == 'PATCH' or 'PUT':
+            return EditActorSerializer
+        return ActorSerializer
+
 
 class StaffViewSet(viewsets.ModelViewSet):
     # serializer_class = StaffSerializer
@@ -59,8 +65,8 @@ class StaffViewSet(viewsets.ModelViewSet):
         return Staff.objects.filter(actors__id=self.kwargs['actor_pk'], actors__project__client__user=self.request.user)
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return CreateStaffSerializer
+        if self.request.method == 'PATCH' or 'PUT':
+            return EditStaffSerializer
         return StaffSerializer
 
 
@@ -75,6 +81,10 @@ class UserStoryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return UserStory.objects.filter(actor_id=self.kwargs['actor_pk'],
                                         actor__project__client__user=self.request.user)
+    def get_serializer_class(self):
+        if self.request.method == 'PATCH' or 'PUT':
+            return EditUserStorySerializer
+        return UserStorySerializer
 
 
 class UseCaseViewSet(viewsets.ModelViewSet):
@@ -87,6 +97,11 @@ class UseCaseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return UseCase.objects.filter(user_stories__id=self.kwargs['user_story_pk'])
+
+    def get_serializer_class(self):
+        if self.request.method == 'PATCH' or 'PUT':
+            return EditUseCaseSerializer
+        return UseCaseSerializer
 
 
 class UseCaseSpecificationViewSet(viewsets.ModelViewSet):
