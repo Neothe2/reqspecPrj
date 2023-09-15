@@ -20,14 +20,16 @@ class Project(models.Model):
 
 
 # level 3
+
 class Staff(models.Model):
-    role = models.CharField(max_length=255)
+    project = models.ForeignKey(Project, related_name='staff', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
     # actors = models.ManyToManyField('Actor', related_name='staff')
 
 
 class Actor(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='actors')
-    name = models.CharField(max_length=255)
+    role = models.CharField(max_length=255)
     staff = models.ManyToManyField('Staff', related_name='actors')
 
 
@@ -38,19 +40,19 @@ class UserStory(models.Model):
 
 
 class UseCase(models.Model):
+    actor = models.ForeignKey(Actor, related_name='use_cases', on_delete=models.CASCADE)
     user_stories = models.ManyToManyField(UserStory, related_name='use_cases')
     title = models.CharField(max_length=255)
-    specification = models.OneToOneField('UseCaseSpecification', on_delete=models.DO_NOTHING, related_name='use_case', null=True, blank=True)
+    # specification = models.OneToOneField('UseCaseSpecification', on_delete=models.DO_NOTHING, related_name='use_case', null=True, blank=True)
 
 
 class UseCaseSpecification(models.Model):
+    use_case = models.OneToOneField(UseCase, on_delete=models.CASCADE, related_name='specification')
     pass
 
 
 class SpecificationSection(models.Model):
     specification = models.ForeignKey(UseCaseSpecification, on_delete=models.CASCADE, related_name='sections', null=True, blank=True)
-    parent_section = models.ForeignKey('self', on_delete=models.CASCADE, related_name='child_sections', null=True, blank=True)
-    title = models.CharField(max_length=255)
     body = models.CharField(max_length=255)
 
 
