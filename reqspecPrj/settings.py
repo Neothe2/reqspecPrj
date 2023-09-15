@@ -86,13 +86,11 @@ WSGI_APPLICATION = 'reqspecPrj.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'reqspec',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': 'trans123'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation
